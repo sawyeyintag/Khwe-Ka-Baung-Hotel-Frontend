@@ -3,17 +3,17 @@ import { Main } from "@/components/layout/main";
 import { ProfileDropdown } from "@/components/profile-dropdown";
 import { Search } from "@/components/search";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { columns } from "./components/users-columns";
-import { UsersDialogs } from "./components/users-dialogs";
-import { UsersPrimaryButtons } from "./components/users-primary-buttons";
-import { UsersTable } from "./components/users-table";
+import { columns } from "./components/guests-columns";
+import { UsersDialogs } from "./components/guests-dialogs";
+import { UsersPrimaryButtons } from "./components/guests-primary-buttons";
+import { UsersTable } from "./components/guests-table";
 import UsersProvider from "./context/users-context";
-import { userListSchema } from "./data/schema";
-import { users } from "./data/users";
+import { users } from "./data/guests";
+import { guestListSchema } from "./data/schema";
 
 export default function Users() {
   // Parse user list
-  const userList = userListSchema.parse(users);
+  const userList = guestListSchema.parse(users);
 
   return (
     <UsersProvider>

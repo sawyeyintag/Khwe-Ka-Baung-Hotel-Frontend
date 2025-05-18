@@ -1,18 +1,18 @@
-import { Outlet } from '@tanstack/react-router'
+import { Outlet } from "@tanstack/react-router";
 import {
   IconBrowserCheck,
   IconNotification,
   IconPalette,
   IconTool,
   IconUser,
-} from '@tabler/icons-react'
-import { Separator } from '@/components/ui/separator'
-import { Header } from '@/components/layout/header'
-import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
-import SidebarNav from './components/sidebar-nav'
+} from "@tabler/icons-react";
+import { Separator } from "@/components/ui/separator";
+import { Header } from "@/components/layout/header";
+import { Main } from "@/components/layout/main";
+import { ProfileDropdown } from "@/components/profile-dropdown";
+import { Search } from "@/components/search";
+import { ThemeSwitch } from "@/components/theme-switch";
+import SidebarNav from "./components/sidebar-nav";
 
 export default function Settings() {
   return (
@@ -46,33 +46,33 @@ export default function Settings() {
         </div>
       </Main>
     </>
-  )
+  );
 }
 
 const sidebarNavItems = [
   {
-    title: 'Profile',
+    title: "Profile",
     icon: <IconUser size={18} />,
-    href: '/settings',
+    href: "/settings",
   },
   {
-    title: 'Account',
+    title: "Account",
     icon: <IconTool size={18} />,
-    href: '/settings/account',
+    href: "/settings/account",
   },
   {
-    title: 'Appearance',
+    title: "Appearance",
     icon: <IconPalette size={18} />,
-    href: '/settings/appearance',
+    href: "/settings/appearance",
   },
   {
-    title: 'Notifications',
+    title: "Notifications",
     icon: <IconNotification size={18} />,
-    href: '/settings/notifications',
+    href: "/settings/notifications",
   },
   {
-    title: 'Display',
+    title: "Display",
     icon: <IconBrowserCheck size={18} />,
-    href: '/settings/display',
+    href: "/settings/display",
   },
-]
+];
