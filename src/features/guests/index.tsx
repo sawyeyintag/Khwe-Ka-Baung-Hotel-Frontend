@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { guestService } from "@/services/guest.service";
 import { Header } from "@/components/layout/header";
 import { Main } from "@/components/layout/main";
 import { ProfileDropdown } from "@/components/profile-dropdown";
@@ -5,18 +7,24 @@ import { Search } from "@/components/search";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { columns } from "./components/guests-columns";
 import { UsersDialogs } from "./components/guests-dialogs";
-import { UsersPrimaryButtons } from "./components/guests-primary-buttons";
-import { UsersTable } from "./components/guests-table";
-import UsersProvider from "./context/users-context";
-import { users } from "./data/guests";
-import { guestListSchema } from "./data/schema";
+import { GuestsPrimaryButtons } from "./components/guests-primary-buttons";
+import { GuestsTable } from "./components/guests-table";
+import GuestsProvider from "./context/guests-context";
+import { Guest } from "./data/schema";
 
 export default function Users() {
-  // Parse user list
-  const userList = guestListSchema.parse(users);
+  const [guests, setGuests] = useState<Guest[]>([]);
+
+  useEffect(() => {
+    async function fetchGuestList() {
+      const response = await guestService.getGuestList();
+      setGuests(response);
+    }
+    fetchGuestList();
+  }, []);
 
   return (
-    <UsersProvider>
+    <GuestsProvider>
       <Header fixed>
         <Search />
         <div className='ml-auto flex items-center space-x-4'>
@@ -28,19 +36,17 @@ export default function Users() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>User List</h2>
-            <p className='text-muted-foreground'>
-              Manage your users and their roles here.
-            </p>
+            <h2 className='text-2xl font-bold tracking-tight'>Guest List</h2>
+            <p className='text-muted-foreground'>Manage your guests here.</p>
           </div>
-          <UsersPrimaryButtons />
+          <GuestsPrimaryButtons />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-          <UsersTable data={userList} columns={columns} />
+          <GuestsTable data={guests} columns={columns} />
         </div>
       </Main>
 
       <UsersDialogs />
-    </UsersProvider>
+    </GuestsProvider>
   );
 }

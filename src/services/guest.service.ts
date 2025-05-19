@@ -1,25 +1,30 @@
-import { apiService } from "@/plugins/axios";
-import { GuestUpsert } from "@/types/guest.type";
+import { apiService, ResponseData } from "@/plugins/axios";
+import { GuestUpsert, Guest } from "@/features/guests/data/schema";
 
 export const guestService = {
   async getGuestList() {
-    const response = await apiService.get("/guests");
-    return response.data;
+    const response: ResponseData<Guest[]> = await apiService.get("/guests");
+    return response.data.data;
   },
   async getGuestById(id: string) {
-    const response = await apiService.get(`/guests/${id}`);
-    return response.data;
+    const response: ResponseData<Guest> = await apiService.get(`/guests/${id}`);
+    return response.data.data;
   },
   async createGuest(data: GuestUpsert) {
-    const response = await apiService.post("/guests", data);
-    return response.data;
+    const response: ResponseData<Guest> = await apiService.post(
+      "/guests",
+      data
+    );
+    return response.data.data;
   },
   async updateGuest(id: string, data: GuestUpsert) {
-    const response = await apiService.put(`/guests/${id}`, data);
-    return response.data;
+    const response: ResponseData<Guest> = await apiService.put(
+      `/guests/${id}`,
+      data
+    );
+    return response.data.data;
   },
   async deleteGuest(id: string) {
-    const response = await apiService.delete(`/guests/${id}`);
-    return response.data;
+    await apiService.delete(`/guests/${id}`);
   },
 };

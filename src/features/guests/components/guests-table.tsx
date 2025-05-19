@@ -38,7 +38,7 @@ interface DataTableProps {
   data: Guest[];
 }
 
-export function UsersTable({ columns, data }: DataTableProps) {
+export function GuestsTable({ columns, data }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);

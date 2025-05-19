@@ -1,9 +1,7 @@
-"use client";
-
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { showSubmittedData } from "@/utils/show-submitted-data";
+import { guestService } from "@/services/guest.service";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,67 +20,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/password-input";
 import { Guest } from "../data/schema";
 
-const formSchema = z
-  .object({
-    firstName: z.string().min(1, { message: "First Name is required." }),
-    lastName: z.string().min(1, { message: "Last Name is required." }),
-    username: z.string().min(1, { message: "Username is required." }),
-    phoneNumber: z.string().min(1, { message: "Phone number is required." }),
-    email: z
-      .string()
-      .min(1, { message: "Email is required." })
-      .email({ message: "Email is invalid." }),
-    password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, { message: "Role is required." }),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
-    isEdit: z.boolean(),
-  })
-  .superRefine(({ isEdit, password, confirmPassword }, ctx) => {
-    if (!isEdit || (isEdit && password !== "")) {
-      if (password === "") {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Password is required.",
-          path: ["password"],
-        });
-      }
-
-      if (password.length < 8) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Password must be at least 8 characters long.",
-          path: ["password"],
-        });
-      }
-
-      if (!password.match(/[a-z]/)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Password must contain at least one lowercase letter.",
-          path: ["password"],
-        });
-      }
-
-      if (!password.match(/\d/)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Password must contain at least one number.",
-          path: ["password"],
-        });
-      }
-
-      if (password !== confirmPassword) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Passwords don't match.",
-          path: ["confirmPassword"],
-        });
-      }
-    }
-  });
+const formSchema = z.object({
+  name: z.string().min(1, { message: "Name is required." }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required." })
+    .email({ message: "Email is invalid." }),
+  phone: z.string().min(1, { message: "Phone is required." }),
+  address: z.string().min(1, { message: "Address is required." }),
+  nicCardNum: z.string().min(1, { message: "NIC is required." }),
+  isEdit: z.boolean(),
+});
 type UserForm = z.infer<typeof formSchema>;
 
 interface Props {
@@ -91,37 +41,34 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
-export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
+export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
   const isEdit = !!currentRow;
   const form = useForm<UserForm>({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
           ...currentRow,
-          password: "",
-          confirmPassword: "",
           isEdit,
         }
       : {
-          firstName: "",
-          lastName: "",
-          username: "",
+          name: "",
           email: "",
-          role: "",
-          phoneNumber: "",
-          password: "",
-          confirmPassword: "",
+          phone: "",
+          address: "",
+          nicCardNum: "",
           isEdit,
         },
   });
 
-  const onSubmit = (values: UserForm) => {
+  const onSubmit = async (values: UserForm) => {
     form.reset();
-    showSubmittedData(values);
+    if (isEdit) {
+      await guestService.updateGuest(currentRow.uid, values);
+    } else {
+      await guestService.createGuest(values);
+    }
     onOpenChange(false);
   };
-
-  const isPasswordTouched = !!form.formState.dirtyFields.password;
 
   return (
     <Dialog
@@ -133,26 +80,26 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-left'>
-          <DialogTitle>{isEdit ? "Edit User" : "Add New User"}</DialogTitle>
+          <DialogTitle>{isEdit ? "Edit Guest" : "Add New Guest"}</DialogTitle>
           <DialogDescription>
-            {isEdit ? "Update the user here. " : "Create new user here. "}
+            {isEdit ? "Update the guest here. " : "Create new guest here. "}
             Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <div className='-mr-4 h-[26.25rem] w-full overflow-y-auto py-1 pr-4'>
+        <div className='-mr-4 h-[16rem] w-full overflow-y-auto py-1 pr-4'>
           <Form {...form}>
             <form
-              id='user-form'
+              id='guest-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 p-0.5'
             >
               <FormField
                 control={form.control}
-                name='firstName'
+                name='name'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      First Name
+                      Name
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -166,37 +113,18 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
-                name='lastName'
+                name='nicCardNum'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Last Name
+                      NIC Card Number
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Doe'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Username
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john_doe'
+                        placeholder='MG123456'
                         className='col-span-4'
                         {...field}
                       />
@@ -205,6 +133,27 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name='address'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-right'>
+                      Address
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='123 Main St'
+                        className='col-span-4'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name='email'
@@ -226,7 +175,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='phoneNumber'
+                name='phone'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
@@ -243,51 +192,11 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='confirmPassword'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        disabled={!isPasswordTouched}
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
             </form>
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='user-form'>
+          <Button type='submit' form='guest-form'>
             Save changes
           </Button>
         </DialogFooter>

@@ -15,7 +15,7 @@ interface Props {
   currentRow: Guest;
 }
 
-export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
+export function GuestsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const [value, setValue] = useState("");
 
   const handleDelete = () => {

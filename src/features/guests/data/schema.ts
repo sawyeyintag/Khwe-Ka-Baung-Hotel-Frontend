@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-const guestSchema = z.object({
-  id: z.string(),
+export const guestSchema = z.object({
+  uid: z.string(),
   name: z.string(),
   email: z.string(),
   phone: z.string(),
@@ -10,6 +10,13 @@ const guestSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
+
+export const guestUpsertSchema = guestSchema.omit({
+  uid: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export type Guest = z.infer<typeof guestSchema>;
 
-export const guestListSchema = z.array(guestSchema);
+export type GuestUpsert = z.infer<typeof guestUpsertSchema>;

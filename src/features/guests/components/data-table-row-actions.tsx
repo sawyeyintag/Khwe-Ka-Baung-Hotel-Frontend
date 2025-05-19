@@ -10,7 +10,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useUsers } from "../context/users-context";
+import { useGuests } from "../context/guests-context";
 import { Guest } from "../data/schema";
 
 interface DataTableRowActionsProps {
@@ -18,7 +18,7 @@ interface DataTableRowActionsProps {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentRow } = useUsers();
+  const { setOpen, setCurrentRow } = useGuests();
   return (
     <>
       <DropdownMenu modal={false}>

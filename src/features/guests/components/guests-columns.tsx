@@ -6,23 +6,29 @@ import { DataTableRowActions } from "./data-table-row-actions";
 
 export const columns: ColumnDef<Guest>[] = [
   {
-    id: "name",
+    accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Name' />
     ),
-    cell: ({ row }) => {
-      const { name } = row.original;
-      return <LongText className='max-w-36'>{name}</LongText>;
-    },
-    meta: { className: "w-36" },
+    cell: ({ row }) => (
+      <LongText className='max-w-36'>{row.getValue("name")}</LongText>
+    ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "nicCardNum",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Email' />
+      <DataTableColumnHeader column={column} title='NIC' />
+    ),
+    cell: ({ row }) => <div>{row.getValue("nicCardNum")}</div>,
+    enableSorting: false,
+  },
+  {
+    accessorKey: "address",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Address' />
     ),
     cell: ({ row }) => (
-      <div className='w-fit text-nowrap'>{row.getValue("email")}</div>
+      <LongText className='max-w-36'>{row.getValue("address")}</LongText>
     ),
   },
   {
@@ -32,6 +38,15 @@ export const columns: ColumnDef<Guest>[] = [
     ),
     cell: ({ row }) => <div>{row.getValue("phone")}</div>,
     enableSorting: false,
+  },
+  {
+    accessorKey: "email",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Email' />
+    ),
+    cell: ({ row }) => (
+      <div className='w-fit text-nowrap'>{row.getValue("email")}</div>
+    ),
   },
   {
     id: "actions",
