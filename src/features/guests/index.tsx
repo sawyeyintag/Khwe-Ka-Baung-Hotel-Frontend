@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { guestService } from "@/services/guest.service";
 import { Header } from "@/components/layout/header";
 import { Main } from "@/components/layout/main";
 import { ProfileDropdown } from "@/components/profile-dropdown";
@@ -10,21 +8,22 @@ import { UsersDialogs } from "./components/guests-dialogs";
 import { GuestsPrimaryButtons } from "./components/guests-primary-buttons";
 import { GuestsTable } from "./components/guests-table";
 import GuestsProvider from "./context/guests-context";
-import { Guest } from "./data/schema";
+import { useGuests } from "./context/guests-context";
 
 export default function Users() {
-  const [guests, setGuests] = useState<Guest[]>([]);
-
-  useEffect(() => {
-    async function fetchGuestList() {
-      const response = await guestService.getGuestList();
-      setGuests(response);
-    }
-    fetchGuestList();
-  }, []);
-
   return (
     <GuestsProvider>
+      <UsersContent />
+    </GuestsProvider>
+  );
+}
+
+// Create a child component to use the context
+function UsersContent() {
+  const { guests } = useGuests();
+
+  return (
+    <>
       <Header fixed>
         <Search />
         <div className='ml-auto flex items-center space-x-4'>
@@ -47,6 +46,6 @@ export default function Users() {
       </Main>
 
       <UsersDialogs />
-    </GuestsProvider>
+    </>
   );
 }
