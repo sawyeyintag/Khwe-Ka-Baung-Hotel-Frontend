@@ -5,7 +5,7 @@ import Guests from "@/features/guests";
 export const Route = createFileRoute("/_authenticated/guests/")({
   component: Guests,
   loader: async () => {
-    const response = await guestService.getGuestList();
+    const response = await guestService.getAll();
     return response;
   },
 });
