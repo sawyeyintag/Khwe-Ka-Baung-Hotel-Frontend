@@ -3,27 +3,14 @@ import { Main } from "@/components/layout/main";
 import { ProfileDropdown } from "@/components/profile-dropdown";
 import { Search } from "@/components/search";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { columns } from "./components/guests-columns";
 import { UsersDialogs } from "./components/guests-dialogs";
 import { GuestsPrimaryButtons } from "./components/guests-primary-buttons";
 import { GuestsTable } from "./components/guests-table";
 import GuestsProvider from "./context/guests-context";
-import { useGuests } from "./context/guests-context";
 
 export default function Users() {
   return (
     <GuestsProvider>
-      <UsersContent />
-    </GuestsProvider>
-  );
-}
-
-// Create a child component to use the context
-function UsersContent() {
-  const { guests } = useGuests();
-
-  return (
-    <>
       <Header fixed>
         <Search />
         <div className='ml-auto flex items-center space-x-4'>
@@ -41,11 +28,11 @@ function UsersContent() {
           <GuestsPrimaryButtons />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-          <GuestsTable data={guests} columns={columns} />
+          <GuestsTable />
         </div>
       </Main>
 
       <UsersDialogs />
-    </>
+    </GuestsProvider>
   );
 }

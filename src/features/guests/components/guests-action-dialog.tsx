@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { guestService } from "@/services/guest.service";
+import { toast } from "sonner";
+import { useGuestStore } from "@/stores/guestStore";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -42,6 +45,7 @@ interface Props {
 }
 
 export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
+  const { createGuest, updateGuest } = useGuestStore((state) => state.guest);
   const isEdit = !!currentRow;
   const form = useForm<UserForm>({
     resolver: zodResolver(formSchema),
@@ -60,12 +64,29 @@ export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
         },
   });
 
+  const createMutation = useMutation({
+    mutationFn: (values: UserForm) => guestService.create(values),
+    onSuccess: (newGuest) => {
+      createGuest(newGuest);
+      toast.success("Guest created successfully");
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (data: { uid: string; values: UserForm }) =>
+      guestService.update(data.uid, data.values),
+    onSuccess: (updatedGuest) => {
+      updateGuest(updatedGuest);
+      toast.success("Guest updated successfully");
+    },
+  });
+
   const onSubmit = async (values: UserForm) => {
     form.reset();
     if (isEdit) {
-      await guestService.updateGuest(currentRow.uid, values);
+      updateMutation.mutate({ uid: currentRow!.uid, values });
     } else {
-      await guestService.createGuest(values);
+      createMutation.mutate(values);
     }
     onOpenChange(false);
   };

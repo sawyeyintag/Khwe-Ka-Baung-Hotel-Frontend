@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLoaderData } from "@tanstack/react-router";
 import {
-  ColumnDef,
   ColumnFiltersState,
   RowData,
   SortingState,
@@ -14,6 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useGuestStore } from "@/stores/guestStore";
 import {
   Table,
   TableBody,
@@ -22,9 +23,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Guest } from "../data/schema";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { columns } from "./guests-columns";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -33,19 +34,21 @@ declare module "@tanstack/react-table" {
   }
 }
 
-interface DataTableProps {
-  columns: ColumnDef<Guest>[];
-  data: Guest[];
-}
-
-export function GuestsTable({ columns, data }: DataTableProps) {
+export function GuestsTable() {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
+  const guests = useLoaderData({ from: "/_authenticated/guests/" });
+  const { guestList, setAllGuests } = useGuestStore((state) => state.guest);
+
+  useEffect(() => {
+    setAllGuests(guests);
+  }, [guests, setAllGuests]);
+
   const table = useReactTable({
-    data,
+    data: guestList,
     columns,
     state: {
       sorting,
