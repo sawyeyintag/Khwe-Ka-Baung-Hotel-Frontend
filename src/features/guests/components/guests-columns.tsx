@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { ColumnDef } from "@tanstack/react-table";
 import LongText from "@/components/long-text";
 import { Guest } from "../data/schema";
@@ -47,6 +48,26 @@ export const columns: ColumnDef<Guest>[] = [
     cell: ({ row }) => (
       <div className='w-fit text-nowrap'>{row.getValue("email")}</div>
     ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Created At' />
+    ),
+    cell: ({ row }) => (
+      <div>{format(new Date(row.getValue("createdAt")), "dd-MMM-yyyy")}</div>
+    ),
+    enableSorting: false,
+  },
+  {
+    accessorKey: "updatedAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Updated At' />
+    ),
+    cell: ({ row }) => (
+      <div>{format(new Date(row.getValue("updatedAt")), "dd-MMM-yyyy")}</div>
+    ),
+    enableSorting: false,
   },
   {
     id: "actions",
