@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { guestService } from "@/services/guest.service";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useGuestStore } from "@/stores/guestStore";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ const formSchema = z.object({
   nicCardNum: z.string().min(1, { message: "NIC is required." }),
   isEdit: z.boolean(),
 });
-type UserForm = z.infer<typeof formSchema>;
+type GuestForm = z.infer<typeof formSchema>;
 
 interface Props {
   currentRow?: Guest;
@@ -47,7 +48,7 @@ interface Props {
 export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
   const { createGuest, updateGuest } = useGuestStore((state) => state.guest);
   const isEdit = !!currentRow;
-  const form = useForm<UserForm>({
+  const form = useForm<GuestForm>({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
@@ -64,30 +65,28 @@ export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
         },
   });
 
-  const createMutation = useMutation({
-    mutationFn: (values: UserForm) => guestService.create(values),
-    onSuccess: (newGuest) => {
-      createGuest(newGuest);
-      toast.success("Guest created successfully");
+  const { mutate, isPending } = useMutation({
+    mutationFn: (values: GuestForm) => {
+      if (values.isEdit && currentRow) {
+        return guestService.update(currentRow.uid, values);
+      } else {
+        return guestService.create(values);
+      }
+    },
+    onSuccess: (result) => {
+      if (form.getValues().isEdit) {
+        updateGuest(result);
+        toast.success("Guest updated successfully");
+      } else {
+        createGuest(result);
+        toast.success("Guest created successfully");
+      }
     },
   });
 
-  const updateMutation = useMutation({
-    mutationFn: (data: { uid: string; values: UserForm }) =>
-      guestService.update(data.uid, data.values),
-    onSuccess: (updatedGuest) => {
-      updateGuest(updatedGuest);
-      toast.success("Guest updated successfully");
-    },
-  });
-
-  const onSubmit = async (values: UserForm) => {
+  const onSubmit = async (values: GuestForm) => {
+    mutate(values);
     form.reset();
-    if (isEdit) {
-      updateMutation.mutate({ uid: currentRow!.uid, values });
-    } else {
-      createMutation.mutate(values);
-    }
     onOpenChange(false);
   };
 
@@ -217,7 +216,8 @@ export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='guest-form'>
+          <Button type='submit' form='guest-form' disabled={isPending}>
+            {isPending && <Loader2 className='animate-spin' />}
             Save changes
           </Button>
         </DialogFooter>

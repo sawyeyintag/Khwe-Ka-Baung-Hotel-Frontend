@@ -23,7 +23,7 @@ export function GuestsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
 
   const { deleteGuest } = useGuestStore((state) => state.guest);
 
-  const deleteMutation = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationFn: (uid: string) => guestService.delete(uid),
     onSuccess: () => {
       deleteGuest(currentRow.uid);
@@ -33,7 +33,7 @@ export function GuestsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
 
   const handleDelete = () => {
     if (value.trim() !== currentRow.nicCardNum) return;
-    deleteMutation.mutate(currentRow.uid);
+    mutate(currentRow.uid);
     onOpenChange(false);
   };
 
@@ -42,6 +42,7 @@ export function GuestsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
       open={open}
       onOpenChange={onOpenChange}
       handleConfirm={handleDelete}
+      isLoading={isPending}
       disabled={value.trim() !== currentRow.nicCardNum}
       title={
         <span className='text-destructive'>
