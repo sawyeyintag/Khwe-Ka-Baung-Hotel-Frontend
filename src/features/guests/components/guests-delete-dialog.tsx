@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { IconAlertTriangle } from "@tabler/icons-react";
-import { showSubmittedData } from "@/utils/show-submitted-data";
+import { guestService } from "@/services/guest.service";
+import { toast } from "sonner";
+import { useGuestStore } from "@/stores/guestStore";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,11 +21,20 @@ interface Props {
 export function GuestsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const [value, setValue] = useState("");
 
+  const { deleteGuest } = useGuestStore((state) => state.guest);
+
+  const deleteMutation = useMutation({
+    mutationFn: (uid: string) => guestService.delete(uid),
+    onSuccess: () => {
+      deleteGuest(currentRow.uid);
+      toast.success("Guest deleted successfully");
+    },
+  });
+
   const handleDelete = () => {
     if (value.trim() !== currentRow.nicCardNum) return;
-
+    deleteMutation.mutate(currentRow.uid);
     onOpenChange(false);
-    showSubmittedData(currentRow, "The following guest has been deleted:");
   };
 
   return (
