@@ -23,7 +23,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SelectDropdown } from "@/components/select-dropdown";
-import { Room } from "../schema/schema";
+import { roomTypes } from "../data/data";
+import { Room } from "../data/schema";
 
 const formSchema = z.object({
   roomNumber: z.number().refine((value) => value >= 100 && value <= 999, {
@@ -123,6 +124,28 @@ export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='roomTypeId'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-right'>
+                      Room Type
+                    </FormLabel>
+                    <SelectDropdown
+                      defaultValue={String(field.value)}
+                      onValueChange={(val) => field.onChange(Number(val))}
+                      placeholder='Select a room type'
+                      className='col-span-4'
+                      items={roomTypes.map(({ name, id }) => ({
+                        label: name,
+                        value: String(id),
+                      }))}
+                    />
                     <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
                 )}

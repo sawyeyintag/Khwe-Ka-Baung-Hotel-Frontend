@@ -1,5 +1,5 @@
 import { apiService, ResponseData } from "@/plugins/axios";
-import { Room, RoomUpsert } from "@/features/rooms/schema/schema";
+import { Room, RoomUpsert } from "@/features/rooms/data/schema";
 
 export const roomService = {
   async getAll() {

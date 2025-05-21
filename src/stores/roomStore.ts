@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Room } from "@/features/rooms/schema/schema";
+import { Room } from "@/features/rooms/data/schema";
 
 interface RoomState {
   room: {
