@@ -1,28 +1,21 @@
-import { useUsers } from "../context/users-context";
-import { UsersActionDialog } from "./rooms-action-dialog";
-import { UsersDeleteDialog } from "./users-delete-dialog";
-import { UsersInviteDialog } from "./users-invite-dialog";
+import { useRooms } from "../context/rooms-context";
+import { RoomsActionDialog } from "./rooms-action-dialog";
+import { RoomsDeleteDialog } from "./rooms-delete-dialog";
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function RoomsDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = useRooms();
   return (
     <>
-      <UsersActionDialog
-        key='user-add'
+      <RoomsActionDialog
+        key='room-add'
         open={open === "add"}
         onOpenChange={() => setOpen("add")}
       />
 
-      <UsersInviteDialog
-        key='user-invite'
-        open={open === "invite"}
-        onOpenChange={() => setOpen("invite")}
-      />
-
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
+          <RoomsActionDialog
+            key={`room-edit-${currentRow.roomNumber}`}
             open={open === "edit"}
             onOpenChange={() => {
               setOpen("edit");
@@ -33,8 +26,8 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
+          <RoomsDeleteDialog
+            key={`rooms-delete-${currentRow.roomNumber}`}
             open={open === "delete"}
             onOpenChange={() => {
               setOpen("delete");

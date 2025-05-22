@@ -1,7 +1,7 @@
 export enum RoomStatusIds {
-  Available = 1,
-  NotAvailable,
-  Booked,
+  "Available" = 1,
+  "Not Available",
+  "Booked",
 }
 
 export enum RoomTypeIds {

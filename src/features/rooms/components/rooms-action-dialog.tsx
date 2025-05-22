@@ -1,5 +1,3 @@
-"use client";
-
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,11 +25,20 @@ import { roomTypes } from "../data/data";
 import { Room } from "../data/schema";
 
 const formSchema = z.object({
-  roomNumber: z.number().refine((value) => value >= 100 && value <= 999, {
-    message: "Room number must be a 3-digit number",
-  }),
-  floorNumber: z.number(),
-  roomTypeId: z.number(),
+  roomNumber: z.coerce
+    .number()
+    .int()
+    .min(100, { message: "Room number must be a 3-digit number" })
+    .max(999, { message: "Room number must be a 3-digit number" }),
+  floorNumber: z.coerce
+    .number()
+    .int()
+    .min(1, { message: "Floor number must be a one-digit number" })
+    .max(9, { message: "Floor number must be a one-digit number" }),
+  roomTypeId: z
+    .number()
+    .min(1, { message: "Room type is required" })
+    .transform((val) => Number(val)),
   isEdit: z.boolean(),
 });
 
@@ -53,9 +60,10 @@ export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
           isEdit,
         }
       : {
-          roomNumber: 0,
-          floorNumber: 0,
-          roomTypeId: 0,
+          roomNumber: undefined,
+          floorNumber: 1,
+          roomTypeId: undefined,
+          isEdit,
         },
   });
 
@@ -81,7 +89,7 @@ export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
             Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <div className='-mr-4 h-[26.25rem] w-full overflow-y-auto py-1 pr-4'>
+        <div className='-mr-4 h-[10-rem] w-full overflow-y-auto py-1 pr-4'>
           <Form {...form}>
             <form
               id='room-form'
@@ -140,7 +148,7 @@ export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
                       defaultValue={String(field.value)}
                       onValueChange={(val) => field.onChange(Number(val))}
                       placeholder='Select a room type'
-                      className='col-span-4'
+                      className='col-span-4 w-full'
                       items={roomTypes.map(({ name, id }) => ({
                         label: name,
                         value: String(id),
