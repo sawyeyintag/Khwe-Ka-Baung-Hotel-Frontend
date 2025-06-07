@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { showSubmittedData } from "@/utils/show-submitted-data";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { roomService } from "@/services/room.service";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,28 +24,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SelectDropdown } from "@/components/select-dropdown";
+import { Room, roomUpsertSchema } from "../../schema/room.zod";
 import { roomTypes } from "../data/data";
-import { Room } from "../data/schema";
 
-const formSchema = z.object({
-  roomNumber: z.coerce
-    .number()
-    .int()
-    .min(100, { message: "Room number must be a 3-digit number" })
-    .max(999, { message: "Room number must be a 3-digit number" }),
-  floorNumber: z.coerce
-    .number()
-    .int()
-    .min(1, { message: "Floor number must be a one-digit number" })
-    .max(9, { message: "Floor number must be a one-digit number" }),
-  roomTypeId: z
-    .number()
-    .min(1, { message: "Room type is required" })
-    .transform((val) => Number(val)),
-  isEdit: z.boolean(),
-});
-
-type RoomForm = z.infer<typeof formSchema>;
+type RoomForm = z.infer<typeof roomUpsertSchema>;
 
 interface Props {
   currentRow?: Room;
@@ -53,25 +38,56 @@ interface Props {
 export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
   const isEdit = !!currentRow;
   const form = useForm<RoomForm>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(roomUpsertSchema),
     defaultValues: isEdit
       ? {
           ...currentRow,
           isEdit,
         }
       : {
-          roomNumber: 0,
+          roomNumber: "",
           floorNumber: 0,
           roomTypeId: 0,
           isEdit,
         },
   });
 
-  const onSubmit = (values: RoomForm) => {
-    form.reset();
-    showSubmittedData(values);
-    onOpenChange(false);
-  };
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (values: RoomForm) => {
+      if (values.isEdit) {
+        const updatedRoom = {
+          floorNumber: values.floorNumber,
+          roomTypeId: values.roomTypeId,
+        };
+        return roomService.update(values.roomNumber, updatedRoom);
+      } else {
+        const newRoom = {
+          roomNumber: values.roomNumber,
+          floorNumber: values.floorNumber,
+          roomTypeId: values.roomTypeId,
+        };
+        return roomService.create(newRoom);
+      }
+    },
+    onSuccess: () => {
+      if (form.getValues().isEdit) {
+        toast.success("Room updated successfully");
+      } else {
+        toast.success("Room created successfully");
+      }
+      queryClient.invalidateQueries({
+        queryKey: ["rooms"],
+      });
+      form.reset();
+      onOpenChange(false);
+    },
+  });
+
+  function onSubmit(values: RoomForm) {
+    mutate(values);
+  }
 
   return (
     <Dialog
@@ -108,7 +124,7 @@ export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
                       <Input
                         placeholder='101'
                         className='col-span-4'
-                        type='number'
+                        type='string'
                         {...field}
                       />
                     </FormControl>
@@ -162,7 +178,8 @@ export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='room-form'>
+          <Button type='submit' form='room-form' disabled={isPending}>
+            {isPending && <Loader2 className='animate-spin' />}
             Save changes
           </Button>
         </DialogFooter>

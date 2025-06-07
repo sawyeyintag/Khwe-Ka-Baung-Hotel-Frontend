@@ -4,8 +4,7 @@ import { IconCash, IconUser, IconStairs } from "@tabler/icons-react";
 import { roomService } from "@/services/room.service";
 import { Button } from "@/components/ui/button";
 import { useRooms } from "../context/rooms-context";
-import { RoomStatusIds } from "../data/data";
-import { Room } from "../data/schema";
+import { roomFilterSorter } from "../utils/room-filters";
 
 export default function RoomsCollections() {
   const { searchTerm, roomType, sort } = useRooms();
@@ -21,28 +20,7 @@ export default function RoomsCollections() {
   const filteredRooms = useMemo(() => {
     if (!rooms) return [];
 
-    const sortRooms = (a: { roomNumber: number }, b: { roomNumber: number }) =>
-      sort === "ascending"
-        ? a.roomNumber - b.roomNumber
-        : b.roomNumber - a.roomNumber;
-
-    const filterByStatus = (room: Room) => {
-      switch (roomType) {
-        case "booked":
-          return room.status.id === RoomStatusIds.BOOKED;
-        case "available":
-          return room.status.id === RoomStatusIds.AVAILABLE;
-        case "notAvailable":
-          return room.status.id === RoomStatusIds.NOT_AVAILABLE;
-        default:
-          return true;
-      }
-    };
-
-    const filterBySearch = (room: Room) =>
-      room.roomType.name.toLowerCase().includes(searchTerm.toLowerCase());
-
-    return rooms.sort(sortRooms).filter(filterByStatus).filter(filterBySearch);
+    return roomFilterSorter.filterAndSort(rooms, searchTerm, roomType, sort);
   }, [rooms, searchTerm, roomType, sort]);
 
   return (

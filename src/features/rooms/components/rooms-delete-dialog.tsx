@@ -7,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ConfirmDialog } from "@/components/confirm-dialog";
-import { Room } from "../data/schema";
+import { Room } from "../../schema/room.zod";
 
 interface Props {
   open: boolean;
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function RoomsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
-  const [value, setValue] = useState<number>();
+  const [value, setValue] = useState<string>();
 
   const handleDelete = () => {
     if (value !== currentRow.roomNumber) return;
@@ -55,7 +55,7 @@ export function RoomsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
             Room Number:
             <Input
               value={value}
-              onChange={(e) => setValue(Number(e.target.value))}
+              onChange={(e) => setValue(e.target.value)}
               placeholder='Enter room number to confirm deletion.'
             />
           </Label>
