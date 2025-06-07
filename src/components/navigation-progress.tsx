@@ -1,18 +1,26 @@
 import { useEffect, useRef } from "react";
+import { useIsFetching } from "@tanstack/react-query";
 import { useRouterState } from "@tanstack/react-router";
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
 
 export function NavigationProgress() {
   const ref = useRef<LoadingBarRef>(null);
-  const state = useRouterState();
+  const routerState = useRouterState();
+
+  // Only show for queries that have showLoadingBar: true
+  const loadingBarQueries = useIsFetching({
+    predicate: (query) => query.meta?.showLoadingBar === true,
+  });
 
   useEffect(() => {
-    if (state.status === "pending") {
+    const isLoading = routerState.status === "pending" || loadingBarQueries > 0;
+
+    if (isLoading) {
       ref.current?.continuousStart();
     } else {
       ref.current?.complete();
     }
-  }, [state.status]);
+  }, [routerState.status, loadingBarQueries]);
 
   return (
     <LoadingBar

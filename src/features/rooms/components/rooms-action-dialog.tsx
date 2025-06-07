@@ -60,9 +60,9 @@ export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
           isEdit,
         }
       : {
-          roomNumber: undefined,
-          floorNumber: 1,
-          roomTypeId: undefined,
+          roomNumber: 0,
+          floorNumber: 0,
+          roomTypeId: 0,
           isEdit,
         },
   });

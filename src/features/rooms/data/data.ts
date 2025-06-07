@@ -1,28 +1,13 @@
-export enum RoomStatusIds {
-  "Available" = 1,
-  "Not Available",
-  "Booked",
-}
-
 export enum RoomTypeIds {
   SingleBedRoom = 1,
   DoubleBedRoom,
 }
 
-export const roomStatuses = [
-  {
-    id: 1,
-    label: "Available",
-  },
-  {
-    id: 2,
-    label: "Not Available",
-  },
-  {
-    id: 3,
-    label: "Booked",
-  },
-] as const;
+export enum RoomStatusIds {
+  AVAILABLE = 1,
+  NOT_AVAILABLE,
+  BOOKED,
+}
 
 export const roomTypes = [
   {
