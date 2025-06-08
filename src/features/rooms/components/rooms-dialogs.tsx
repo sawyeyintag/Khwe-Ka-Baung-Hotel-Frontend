@@ -3,7 +3,7 @@ import { RoomsActionDialog } from "./rooms-action-dialog";
 import { RoomsDeleteDialog } from "./rooms-delete-dialog";
 
 export function RoomsDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useRooms();
+  const { open, setOpen, currentRoom, setCurrentRoom } = useRooms();
   return (
     <>
       <RoomsActionDialog
@@ -12,30 +12,30 @@ export function RoomsDialogs() {
         onOpenChange={() => setOpen("add")}
       />
 
-      {currentRow && (
+      {currentRoom && (
         <>
           <RoomsActionDialog
-            key={`room-edit-${currentRow.roomNumber}`}
+            key={`room-edit-${currentRoom.roomNumber}`}
             open={open === "edit"}
             onOpenChange={() => {
               setOpen("edit");
               setTimeout(() => {
-                setCurrentRow(null);
+                setCurrentRoom(null);
               }, 500);
             }}
-            currentRow={currentRow}
+            currentRoom={currentRoom}
           />
 
           <RoomsDeleteDialog
-            key={`rooms-delete-${currentRow.roomNumber}`}
+            key={`rooms-delete-${currentRoom.roomNumber}`}
             open={open === "delete"}
             onOpenChange={() => {
               setOpen("delete");
               setTimeout(() => {
-                setCurrentRow(null);
+                setCurrentRoom(null);
               }, 500);
             }}
-            currentRow={currentRow}
+            currentRoom={currentRoom}
           />
         </>
       )}

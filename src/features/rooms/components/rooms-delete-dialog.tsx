@@ -12,17 +12,17 @@ import { Room } from "../../schema/room.zod";
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  currentRow: Room;
+  currentRoom: Room;
 }
 
-export function RoomsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
+export function RoomsDeleteDialog({ open, onOpenChange, currentRoom }: Props) {
   const [value, setValue] = useState<string>();
 
   const handleDelete = () => {
-    if (value !== currentRow.roomNumber) return;
+    if (value !== currentRoom.roomNumber) return;
 
     onOpenChange(false);
-    showSubmittedData(currentRow, "The following room has been deleted:");
+    showSubmittedData(currentRoom, "The following room has been deleted:");
   };
 
   return (
@@ -30,7 +30,7 @@ export function RoomsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
       open={open}
       onOpenChange={onOpenChange}
       handleConfirm={handleDelete}
-      disabled={value !== currentRow.roomNumber}
+      disabled={value !== currentRoom.roomNumber}
       title={
         <span className='text-destructive'>
           <IconAlertTriangle
@@ -44,10 +44,10 @@ export function RoomsDeleteDialog({ open, onOpenChange, currentRow }: Props) {
         <div className='space-y-4'>
           <p className='mb-2'>
             Are you sure you want to delete{" "}
-            <span className='font-bold'>{currentRow.roomNumber}</span>?
+            <span className='font-bold'>{currentRoom.roomNumber}</span>?
             <br />
             This action will permanently remove the room with the type of{" "}
-            <span className='font-bold'>{currentRow.roomNumber}</span> from the
+            <span className='font-bold'>{currentRoom.roomNumber}</span> from the
             system. This cannot be undone.
           </p>
 

@@ -30,18 +30,18 @@ import { roomTypes } from "../data/data";
 type RoomForm = z.infer<typeof roomUpsertSchema>;
 
 interface Props {
-  currentRow?: Room;
+  currentRoom?: Room;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
-  const isEdit = !!currentRow;
+export function RoomsActionDialog({ currentRoom, open, onOpenChange }: Props) {
+  const isEdit = !!currentRoom;
   const form = useForm<RoomForm>({
     resolver: zodResolver(roomUpsertSchema),
     defaultValues: isEdit
       ? {
-          ...currentRow,
+          ...currentRoom,
           isEdit,
         }
       : {
@@ -56,17 +56,18 @@ export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (values: RoomForm) => {
-      if (values.isEdit) {
+      const { roomNumber, floorNumber, roomTypeId } = values;
+      if (values.isEdit && currentRoom) {
         const updatedRoom = {
-          floorNumber: values.floorNumber,
-          roomTypeId: values.roomTypeId,
+          floorNumber,
+          roomTypeId,
         };
-        return roomService.update(values.roomNumber, updatedRoom);
+        return roomService.update(currentRoom?.roomNumber, updatedRoom);
       } else {
         const newRoom = {
-          roomNumber: values.roomNumber,
-          floorNumber: values.floorNumber,
-          roomTypeId: values.roomTypeId,
+          roomNumber,
+          floorNumber,
+          roomTypeId,
         };
         return roomService.create(newRoom);
       }
@@ -115,6 +116,7 @@ export function RoomsActionDialog({ currentRow, open, onOpenChange }: Props) {
               <FormField
                 control={form.control}
                 name='roomNumber'
+                disabled={isEdit}
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>

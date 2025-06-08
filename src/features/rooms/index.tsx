@@ -1,4 +1,3 @@
-import { Separator } from "@/components/ui/separator";
 import { Header } from "@/components/layout/header";
 import { Main } from "@/components/layout/main";
 import { ProfileDropdown } from "@/components/profile-dropdown";
@@ -23,16 +22,11 @@ export default function Rooms() {
 
       {/* ===== Content ===== */}
       <Main fixed>
-        <div>
-          <h1 className='text-2xl font-bold tracking-tight'>Room Management</h1>
-          <p className='text-muted-foreground'>
-            Here&apos;s a list of your rooms!
-          </p>
+        <>
           <RoomsDialogs />
           <RoomsPrimaryButtons />
-          <Separator className='shadow-sm' />
           <RoomsCollections />
-        </div>
+        </>
       </Main>
     </RoomsProvider>
   );

@@ -17,6 +17,7 @@ export const roomService = {
     return response.data.data;
   },
   async update(roomNumber: string, data: RoomUpdate) {
+    console.log("Updating room:", roomNumber, data);
     const response: ResponseData<Room> = await apiService.put(
       `/rooms/${roomNumber}`,
       data

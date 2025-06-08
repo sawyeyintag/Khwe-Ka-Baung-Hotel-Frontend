@@ -1,10 +1,13 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { IconCash, IconUser, IconStairs } from "@tabler/icons-react";
+import { IconCash, IconUser, IconStairs, IconBed } from "@tabler/icons-react";
 import { roomService } from "@/services/room.service";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useRooms } from "../context/rooms-context";
 import { roomFilterSorter } from "../utils/room-filters";
+import { getRoomStatusColor } from "../utils/room-status-color";
+import { RoomCardActions } from "./room-card-actions";
 
 export default function RoomsCollections() {
   const { searchTerm, roomType, sort } = useRooms();
@@ -26,53 +29,61 @@ export default function RoomsCollections() {
   return (
     <>
       {filteredRooms.length === 0 ? (
-        <div className='mx-auto my-16 py-8 text-center'>
-          <img
-            className='mx-auto w-40'
-            src='/images/database_not_found.png'
-            alt='not found'
-          />
-          <p className='text-center text-xl font-semibold'>
-            No rooms available
+        <div className='py-12 text-center'>
+          <IconBed className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+          <h3 className='mb-2 text-lg font-semibold'>No rooms found</h3>
+          <p className='text-muted-foreground mb-4'>
+            {searchTerm || roomType !== "All"
+              ? "Try adjusting your search or filter criteria"
+              : "Get started by adding your first room"}
           </p>
         </div>
       ) : (
-        <ul className='faded-bottom no-scrollbar grid gap-4 overflow-auto pt-4 pb-16 md:grid-cols-2 lg:grid-cols-3'>
+        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
           {filteredRooms.map((room) => (
-            <li
+            <Card
               key={room.roomNumber}
-              className='rounded-lg border p-4 hover:shadow-md'
+              className='group hover:border-primary/20 gap-3 border-2 transition-all duration-200 hover:shadow-lg'
             >
-              <div className='mb-8 flex items-center justify-between'>
-                <div
-                  className={
-                    "bg-muted flex size-10 items-center justify-center rounded-lg p-3"
-                  }
-                >
-                  {room.roomNumber}
+              <CardHeader>
+                <div className='flex items-start justify-between'>
+                  <div className='space-y-1'>
+                    <div className='flex items-center gap-2'>
+                      <h3 className='text-2xl font-bold'>{room.roomNumber}</h3>
+                      <Badge className={getRoomStatusColor(room.status.id)}>
+                        {room.status.label || "Unknown"}
+                      </Badge>
+                    </div>
+                    <p className='text-muted-foreground text-sm font-medium'>
+                      {room.roomType.name}
+                    </p>
+                  </div>
+                  <RoomCardActions {...room} />
                 </div>
-                <Button variant='outline' size='sm'>
-                  {room.status.label ? room.status.label : "Unknown"}
-                </Button>
-              </div>
-              <div>
-                <h2 className='mb-1 font-semibold'>{room.roomType.name}</h2>
-                <p className='line-clamp-2 text-gray-500'>
-                  <IconStairs size={16} className='mr-3 inline' />
-                  Floor {room.floorNumber}
-                </p>
-                <p className='line-clamp-2 text-gray-500'>
-                  <IconUser size={16} className='mr-3 inline' />
-                  {room.roomType.pax} Pax
-                </p>
-                <p className='line-clamp-2 text-gray-500'>
-                  <IconCash size={16} className='mr-3 inline' />
-                  {room.roomType.price} Ks
-                </p>
-              </div>
-            </li>
+              </CardHeader>
+
+              <CardContent className='space-y-4'>
+                <div className='grid grid-cols-2 gap-3 text-sm'>
+                  <div className='text-muted-foreground flex items-center gap-2'>
+                    <IconStairs className='h-4 w-4' />
+                    Floor {room.floorNumber}
+                  </div>
+                  <div className='text-muted-foreground flex items-center gap-2'>
+                    <IconUser className='h-4 w-4' />
+                    {room.roomType.pax} Pax
+                  </div>
+                </div>
+
+                <div className='flex items-center gap-2'>
+                  <IconCash className='text-muted-foreground h-4 w-4' />
+                  <span className='text-lg font-semibold'>
+                    {room.roomType.price.toLocaleString()} Ks
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
           ))}
-        </ul>
+        </div>
       )}
     </>
   );

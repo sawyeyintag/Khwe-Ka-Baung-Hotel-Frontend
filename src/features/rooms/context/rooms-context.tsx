@@ -7,8 +7,8 @@ type RoomsDialogType = "add" | "edit" | "delete";
 interface RoomsContextType {
   open: RoomsDialogType | null;
   setOpen: (str: RoomsDialogType | null) => void;
-  currentRow: Room | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<Room | null>>;
+  currentRoom: Room | null;
+  setCurrentRoom: React.Dispatch<React.SetStateAction<Room | null>>;
   sort: string;
   setSort: React.Dispatch<React.SetStateAction<string>>;
   roomType: string;
@@ -25,7 +25,7 @@ interface Props {
 
 export default function RoomsProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<RoomsDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<Room | null>(null);
+  const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
 
   const [sort, setSort] = useState("ascending");
   const [roomType, setRoomType] = useState("all");
@@ -36,8 +36,8 @@ export default function RoomsProvider({ children }: Props) {
       value={{
         open,
         setOpen,
-        currentRow,
-        setCurrentRow,
+        currentRoom,
+        setCurrentRoom,
         sort,
         setSort,
         roomType,
