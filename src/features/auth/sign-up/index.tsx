@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link } from "@tanstack/react-router";
 import {
   Card,
   CardContent,
@@ -6,9 +6,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import AuthLayout from '../auth-layout'
-import { SignUpForm } from './components/sign-up-form'
+} from "@/components/ui/card";
+import AuthLayout from "../auth-layout";
+import { SignUpForm } from "./components/sign-up-form";
 
 export default function SignUp() {
   return (
@@ -20,7 +20,7 @@ export default function SignUp() {
           </CardTitle>
           <CardDescription>
             Enter your email and password to create an account. <br />
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link
               to='/sign-in'
               className='hover:text-primary underline underline-offset-4'
@@ -34,14 +34,14 @@ export default function SignUp() {
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>
-            By creating an account, you agree to our{' '}
+            By creating an account, you agree to our{" "}
             <a
               href='/terms'
               className='hover:text-primary underline underline-offset-4'
             >
               Terms of Service
-            </a>{' '}
-            and{' '}
+            </a>{" "}
+            and{" "}
             <a
               href='/privacy'
               className='hover:text-primary underline underline-offset-4'
@@ -53,5 +53,5 @@ export default function SignUp() {
         </CardFooter>
       </Card>
     </AuthLayout>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/utils/show-submitted-data'
-import { Button } from '@/components/ui/button'
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { showSubmittedData } from "@/utils/show-submitted-data";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -11,7 +11,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -19,54 +19,54 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
   file: z
     .instanceof(FileList)
     .refine((files) => files.length > 0, {
-      message: 'Please upload a file',
+      message: "Please upload a file",
     })
     .refine(
-      (files) => ['text/csv'].includes(files?.[0]?.type),
-      'Please upload csv format.'
+      (files) => ["text/csv"].includes(files?.[0]?.type),
+      "Please upload csv format."
     ),
-})
+});
 
 interface Props {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 export function TasksImportDialog({ open, onOpenChange }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { file: undefined },
-  })
+  });
 
-  const fileRef = form.register('file')
+  const fileRef = form.register("file");
 
   const onSubmit = () => {
-    const file = form.getValues('file')
+    const file = form.getValues("file");
 
     if (file && file[0]) {
       const fileDetails = {
         name: file[0].name,
         size: file[0].size,
         type: file[0].type,
-      }
-      showSubmittedData(fileDetails, 'You have imported the following file:')
+      };
+      showSubmittedData(fileDetails, "You have imported the following file:");
     }
-    onOpenChange(false)
-  }
+    onOpenChange(false);
+  };
 
   return (
     <Dialog
       open={open}
       onOpenChange={(val) => {
-        onOpenChange(val)
-        form.reset()
+        onOpenChange(val);
+        form.reset();
       }}
     >
       <DialogContent className='gap-2 sm:max-w-sm'>
@@ -103,5 +103,5 @@ export function TasksImportDialog({ open, onOpenChange }: Props) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

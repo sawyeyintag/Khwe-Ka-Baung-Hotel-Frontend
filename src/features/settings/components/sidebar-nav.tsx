@@ -1,23 +1,23 @@
-import { useState, type JSX } from 'react'
-import { useLocation, useNavigate } from '@tanstack/react-router'
-import { Link } from '@tanstack/react-router'
-import { cn } from '@/lib/utils'
-import { buttonVariants } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { useState, type JSX } from "react";
+import { useLocation, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select";
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {
-    href: string
-    title: string
-    icon: JSX.Element
-  }[]
+    href: string;
+    title: string;
+    icon: JSX.Element;
+  }[];
 }
 
 export default function SidebarNav({
@@ -25,14 +25,14 @@ export default function SidebarNav({
   items,
   ...props
 }: SidebarNavProps) {
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
-  const [val, setVal] = useState(pathname ?? '/settings')
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [val, setVal] = useState(pathname ?? "/settings");
 
   const handleSelect = (e: string) => {
-    setVal(e)
-    navigate({ to: e })
-  }
+    setVal(e);
+    navigate({ to: e });
+  };
 
   return (
     <>
@@ -61,7 +61,7 @@ export default function SidebarNav({
       >
         <nav
           className={cn(
-            'flex space-x-2 py-1 lg:flex-col lg:space-y-1 lg:space-x-0',
+            "flex space-x-2 py-1 lg:flex-col lg:space-y-1 lg:space-x-0",
             className
           )}
           {...props}
@@ -71,11 +71,11 @@ export default function SidebarNav({
               key={item.href}
               to={item.href}
               className={cn(
-                buttonVariants({ variant: 'ghost' }),
+                buttonVariants({ variant: "ghost" }),
                 pathname === item.href
-                  ? 'bg-muted hover:bg-muted'
-                  : 'hover:bg-transparent hover:underline',
-                'justify-start'
+                  ? "bg-muted hover:bg-muted"
+                  : "hover:bg-transparent hover:underline",
+                "justify-start"
               )}
             >
               <span className='mr-2'>{item.icon}</span>
@@ -85,5 +85,5 @@ export default function SidebarNav({
         </nav>
       </ScrollArea>
     </>
-  )
+  );
 }

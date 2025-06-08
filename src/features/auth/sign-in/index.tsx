@@ -5,9 +5,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import AuthLayout from '../auth-layout'
-import { UserAuthForm } from './components/user-auth-form'
+} from "@/components/ui/card";
+import AuthLayout from "../auth-layout";
+import { UserAuthForm } from "./components/user-auth-form";
 
 export default function SignIn() {
   return (
@@ -25,14 +25,14 @@ export default function SignIn() {
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>
-            By clicking login, you agree to our{' '}
+            By clicking login, you agree to our{" "}
             <a
               href='/terms'
               className='hover:text-primary underline underline-offset-4'
             >
               Terms of Service
-            </a>{' '}
-            and{' '}
+            </a>{" "}
+            and{" "}
             <a
               href='/privacy'
               className='hover:text-primary underline underline-offset-4'
@@ -44,5 +44,5 @@ export default function SignIn() {
         </CardFooter>
       </Card>
     </AuthLayout>
-  )
+  );
 }

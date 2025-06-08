@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link } from "@tanstack/react-router";
 import {
   Card,
   CardContent,
@@ -6,9 +6,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import AuthLayout from '../auth-layout'
-import { OtpForm } from './components/otp-form'
+} from "@/components/ui/card";
+import AuthLayout from "../auth-layout";
+import { OtpForm } from "./components/otp-form";
 
 export default function Otp() {
   return (
@@ -28,7 +28,7 @@ export default function Otp() {
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>
-            Haven't received it?{' '}
+            Haven't received it?{" "}
             <Link
               to='/sign-in'
               className='hover:text-primary underline underline-offset-4'
@@ -40,5 +40,5 @@ export default function Otp() {
         </CardFooter>
       </Card>
     </AuthLayout>
-  )
+  );
 }

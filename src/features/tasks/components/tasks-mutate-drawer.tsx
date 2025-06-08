@@ -1,8 +1,8 @@
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/utils/show-submitted-data'
-import { Button } from '@/components/ui/button'
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { showSubmittedData } from "@/utils/show-submitted-data";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -10,9 +10,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Sheet,
   SheetClose,
@@ -21,59 +21,59 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet'
-import { SelectDropdown } from '@/components/select-dropdown'
-import { Task } from '../data/schema'
+} from "@/components/ui/sheet";
+import { SelectDropdown } from "@/components/select-dropdown";
+import { Task } from "../data/schema";
 
 interface Props {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  currentRow?: Task
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  currentRow?: Task;
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, 'Title is required.'),
-  status: z.string().min(1, 'Please select a status.'),
-  label: z.string().min(1, 'Please select a label.'),
-  priority: z.string().min(1, 'Please choose a priority.'),
-})
-type TasksForm = z.infer<typeof formSchema>
+  title: z.string().min(1, "Title is required."),
+  status: z.string().min(1, "Please select a status."),
+  label: z.string().min(1, "Please select a label."),
+  priority: z.string().min(1, "Please choose a priority."),
+});
+type TasksForm = z.infer<typeof formSchema>;
 
 export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
-  const isUpdate = !!currentRow
+  const isUpdate = !!currentRow;
 
   const form = useForm<TasksForm>({
     resolver: zodResolver(formSchema),
     defaultValues: currentRow ?? {
-      title: '',
-      status: '',
-      label: '',
-      priority: '',
+      title: "",
+      status: "",
+      label: "",
+      priority: "",
     },
-  })
+  });
 
   const onSubmit = (data: TasksForm) => {
     // do something with the form data
-    onOpenChange(false)
-    form.reset()
-    showSubmittedData(data)
-  }
+    onOpenChange(false);
+    form.reset();
+    showSubmittedData(data);
+  };
 
   return (
     <Sheet
       open={open}
       onOpenChange={(v) => {
-        onOpenChange(v)
-        form.reset()
+        onOpenChange(v);
+        form.reset();
       }}
     >
       <SheetContent className='flex flex-col'>
         <SheetHeader className='text-left'>
-          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Task</SheetTitle>
+          <SheetTitle>{isUpdate ? "Update" : "Create"} Task</SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? 'Update the task by providing necessary info.'
-              : 'Add a new task by providing necessary info.'}
+              ? "Update the task by providing necessary info."
+              : "Add a new task by providing necessary info."}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
@@ -107,11 +107,11 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
                     onValueChange={field.onChange}
                     placeholder='Select dropdown'
                     items={[
-                      { label: 'In Progress', value: 'in progress' },
-                      { label: 'Backlog', value: 'backlog' },
-                      { label: 'Todo', value: 'todo' },
-                      { label: 'Canceled', value: 'canceled' },
-                      { label: 'Done', value: 'done' },
+                      { label: "In Progress", value: "in progress" },
+                      { label: "Backlog", value: "backlog" },
+                      { label: "Todo", value: "todo" },
+                      { label: "Canceled", value: "canceled" },
+                      { label: "Done", value: "done" },
                     ]}
                   />
                   <FormMessage />
@@ -204,5 +204,5 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
