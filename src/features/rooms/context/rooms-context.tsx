@@ -9,8 +9,6 @@ interface RoomsContextType {
   setOpen: (str: RoomsDialogType | null) => void;
   currentRoom: Room | null;
   setCurrentRoom: React.Dispatch<React.SetStateAction<Room | null>>;
-  sort: string;
-  setSort: React.Dispatch<React.SetStateAction<string>>;
   roomType: string;
   setRoomType: React.Dispatch<React.SetStateAction<string>>;
   searchTerm: string;
@@ -27,7 +25,6 @@ export default function RoomsProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<RoomsDialogType>(null);
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
 
-  const [sort, setSort] = useState("ascending");
   const [roomType, setRoomType] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -38,8 +35,6 @@ export default function RoomsProvider({ children }: Props) {
         setOpen,
         currentRoom,
         setCurrentRoom,
-        sort,
-        setSort,
         roomType,
         setRoomType,
         searchTerm,

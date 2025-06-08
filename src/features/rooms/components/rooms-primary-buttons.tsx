@@ -1,11 +1,4 @@
-import {
-  IconAdjustmentsHorizontal,
-  IconSortAscendingLetters,
-  IconSortDescendingLetters,
-  IconPlus,
-  IconSearch,
-  IconFilter,
-} from "@tabler/icons-react";
+import { IconPlus, IconSearch, IconFilter } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,15 +11,8 @@ import {
 import { useRooms } from "../context/rooms-context";
 
 export default function RoomsPrimaryButtons() {
-  const {
-    searchTerm,
-    setSearchTerm,
-    roomType,
-    setRoomType,
-    sort,
-    setSort,
-    setOpen,
-  } = useRooms();
+  const { searchTerm, setSearchTerm, roomType, setRoomType, setOpen } =
+    useRooms();
 
   return (
     <div className='space-y-6 py-6'>
@@ -65,26 +51,6 @@ export default function RoomsPrimaryButtons() {
             <SelectItem value='available'>Available</SelectItem>
             <SelectItem value='notAvailable'>Not Available</SelectItem>
             <SelectItem value='booked'>Booked</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={sort} onValueChange={setSort}>
-          <SelectTrigger className='w-full sm:w-36'>
-            <IconAdjustmentsHorizontal className='mr-2 h-4 w-4' />
-            <SelectValue placeholder='Sort' />
-          </SelectTrigger>
-          <SelectContent align='end'>
-            <SelectItem value='ascending'>
-              <div className='flex items-center gap-2'>
-                <IconSortAscendingLetters size={16} />
-                <span>Ascending</span>
-              </div>
-            </SelectItem>
-            <SelectItem value='descending'>
-              <div className='flex items-center gap-2'>
-                <IconSortDescendingLetters size={16} />
-                <span>Descending</span>
-              </div>
-            </SelectItem>
           </SelectContent>
         </Select>
       </div>

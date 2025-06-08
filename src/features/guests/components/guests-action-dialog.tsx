@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { guestService } from "@/services/guest.service";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useGuestStore } from "@/stores/guestStore";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -46,7 +46,7 @@ interface Props {
 }
 
 export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
-  const { createGuest, updateGuest } = useGuestStore((state) => state.guest);
+  const queryClient = useQueryClient();
   const isEdit = !!currentRow;
   const form = useForm<GuestForm>({
     resolver: zodResolver(formSchema),
@@ -67,27 +67,35 @@ export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (values: GuestForm) => {
+      const guest = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        address: values.address,
+        nicCardNum: values.nicCardNum,
+      };
       if (values.isEdit && currentRow) {
-        return guestService.update(currentRow.uid, values);
+        return guestService.update(currentRow.uid, guest);
       } else {
-        return guestService.create(values);
+        return guestService.create(guest);
       }
     },
-    onSuccess: (result) => {
+    onSuccess: () => {
       if (form.getValues().isEdit) {
-        updateGuest(result);
         toast.success("Guest updated successfully");
       } else {
-        createGuest(result);
         toast.success("Guest created successfully");
       }
+      queryClient.invalidateQueries({
+        queryKey: ["guests"],
+      });
+      form.reset();
+      onOpenChange(false);
     },
   });
 
   const onSubmit = async (values: GuestForm) => {
     mutate(values);
-    form.reset();
-    onOpenChange(false);
   };
 
   return (

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useLoaderData } from "@tanstack/react-router";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   ColumnFiltersState,
   RowData,
@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useGuestStore } from "@/stores/guestStore";
+import { guestService } from "@/services/guest.service";
 import {
   Table,
   TableBody,
@@ -40,15 +40,16 @@ export function GuestsTable() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const guests = useLoaderData({ from: "/_authenticated/guests/" });
-  const { guestList, setAllGuests } = useGuestStore((state) => state.guest);
-
-  useEffect(() => {
-    setAllGuests(guests);
-  }, [guests, setAllGuests]);
+  const { data = [] } = useQuery({
+    queryKey: ["guests"],
+    queryFn: () => guestService.getAll(),
+    meta: {
+      showLoadingBar: true,
+    },
+  });
 
   const table = useReactTable({
-    data: guestList,
+    data,
     columns,
     state: {
       sorting,
@@ -123,7 +124,14 @@ export function GuestsTable() {
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  <div className='py-12 text-center'>
+                    <img
+                      className='mx-auto mb-1 w-24'
+                      src='/images/database_not_found.png'
+                      alt=''
+                    />
+                    <span className='text-lg font-semibold'>No results</span>
+                  </div>
                 </TableCell>
               </TableRow>
             )}

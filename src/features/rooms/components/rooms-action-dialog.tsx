@@ -62,7 +62,7 @@ export function RoomsActionDialog({ currentRoom, open, onOpenChange }: Props) {
           floorNumber,
           roomTypeId,
         };
-        return roomService.update(currentRoom?.roomNumber, updatedRoom);
+        return roomService.update(currentRoom.roomNumber, updatedRoom);
       } else {
         const newRoom = {
           roomNumber,

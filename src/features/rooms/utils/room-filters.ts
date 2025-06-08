@@ -2,14 +2,6 @@ import { Room } from "@/types/room.type";
 import { RoomStatusIds } from "../data/data";
 
 export const roomFilterSorter = {
-  roomSorter(sort: string) {
-    return (a: Room, b: Room) => {
-      return sort === "ascending"
-        ? Number(a.roomNumber) - Number(b.roomNumber)
-        : Number(b.roomNumber) - Number(a.roomNumber);
-    };
-  },
-
   statusFilter(roomType: string) {
     return (room: Room) => {
       switch (roomType) {
@@ -33,14 +25,8 @@ export const roomFilterSorter = {
     };
   },
 
-  filterAndSort(
-    rooms: Room[],
-    searchTerm: string,
-    roomType: string,
-    sort: string
-  ) {
+  filter(rooms: Room[], searchTerm: string, roomType: string) {
     return rooms
-      .sort(this.roomSorter(sort))
       .filter(this.statusFilter(roomType))
       .filter(this.searchFilter(searchTerm));
   },

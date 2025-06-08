@@ -10,7 +10,7 @@ import { getRoomStatusColor } from "../utils/room-status-color";
 import { RoomCardActions } from "./room-card-actions";
 
 export default function RoomsCollections() {
-  const { searchTerm, roomType, sort } = useRooms();
+  const { searchTerm, roomType } = useRooms();
 
   const { data: rooms } = useQuery({
     queryKey: ["rooms"],
@@ -23,8 +23,8 @@ export default function RoomsCollections() {
   const filteredRooms = useMemo(() => {
     if (!rooms) return [];
 
-    return roomFilterSorter.filterAndSort(rooms, searchTerm, roomType, sort);
-  }, [rooms, searchTerm, roomType, sort]);
+    return roomFilterSorter.filter(rooms, searchTerm, roomType);
+  }, [rooms, searchTerm, roomType]);
 
   return (
     <>
