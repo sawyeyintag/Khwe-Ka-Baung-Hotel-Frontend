@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useLoaderData } from "@tanstack/react-router";
 import useDialogState from "@/hooks/use-dialog-state";
 import { Guest } from "../data/schema";
 
@@ -10,7 +9,6 @@ interface GuestsContextType {
   setOpen: (str: GuestsDialogType | null) => void;
   currentRow: Guest | null;
   setCurrentRow: React.Dispatch<React.SetStateAction<Guest | null>>;
-  guests: Guest[];
 }
 
 const GuestsContext = React.createContext<GuestsContextType | null>(null);
@@ -23,10 +21,8 @@ export default function GuestsProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<GuestsDialogType>(null);
   const [currentRow, setCurrentRow] = useState<Guest | null>(null);
 
-  const guests = useLoaderData({ from: "/_authenticated/guests/" });
-
   return (
-    <GuestsContext value={{ open, setOpen, currentRow, setCurrentRow, guests }}>
+    <GuestsContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
     </GuestsContext>
   );
