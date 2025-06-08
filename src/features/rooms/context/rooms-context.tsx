@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { Room } from "@/types/room.type";
 import useDialogState from "@/hooks/use-dialog-state";
-import { Room } from "../../schema/room.zod";
 
 type RoomsDialogType = "add" | "edit" | "delete";
 

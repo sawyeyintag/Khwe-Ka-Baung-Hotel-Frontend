@@ -21,7 +21,7 @@ export default function Rooms() {
       </Header>
 
       {/* ===== Content ===== */}
-      <Main fixed>
+      <Main>
         <>
           <RoomsDialogs />
           <RoomsPrimaryButtons />

@@ -1,11 +1,17 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { IconCash, IconUser, IconStairs, IconBed } from "@tabler/icons-react";
+import {
+  IconUser,
+  IconStairs,
+  IconBed,
+  IconCoffee,
+  IconX,
+} from "@tabler/icons-react";
 import { roomService } from "@/services/room.service";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useRooms } from "../context/rooms-context";
-import { roomFilterSorter } from "../utils/room-filters";
+import { roomFilter } from "../utils/room-filters";
 import { getRoomStatusColor } from "../utils/room-status-color";
 import { RoomCardActions } from "./room-card-actions";
 
@@ -23,7 +29,7 @@ export default function RoomsCollections() {
   const filteredRooms = useMemo(() => {
     if (!rooms) return [];
 
-    return roomFilterSorter.filter(rooms, searchTerm, roomType);
+    return roomFilter.filter(rooms, searchTerm, roomType);
   }, [rooms, searchTerm, roomType]);
 
   return (
@@ -39,7 +45,7 @@ export default function RoomsCollections() {
           </p>
         </div>
       ) : (
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4'>
           {filteredRooms.map((room) => (
             <Card
               key={room.roomNumber}
@@ -74,11 +80,52 @@ export default function RoomsCollections() {
                   </div>
                 </div>
 
-                <div className='flex items-center gap-2'>
-                  <IconCash className='text-muted-foreground h-4 w-4' />
-                  <span className='text-lg font-semibold'>
-                    {room.roomType.price.toLocaleString()} Ks
-                  </span>
+                {/* Improved Pricing Section */}
+                <div className='space-y-3'>
+                  <h4 className='text-muted-foreground text-sm font-medium'>
+                    Pricing Options
+                  </h4>
+
+                  {/* With Breakfast */}
+                  <div className='flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-3'>
+                    <div className='flex items-center gap-2'>
+                      <IconCoffee className='h-4 w-4 text-green-600' />
+                      <span className='text-sm font-medium text-green-800'>
+                        With Breakfast
+                      </span>
+                    </div>
+                    <span className='font-bold text-green-700'>
+                      {room.roomType.priceWithBreakfast.toLocaleString()} Ks
+                    </span>
+                  </div>
+
+                  {/* Without Breakfast */}
+                  <div className='flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3'>
+                    <div className='flex items-center gap-2'>
+                      <IconX className='h-4 w-4 text-gray-600' />
+                      <span className='text-sm font-medium text-gray-700'>
+                        Without Breakfast
+                      </span>
+                    </div>
+                    <span className='font-bold text-gray-700'>
+                      {room.roomType.priceWithoutBreakfast.toLocaleString()} Ks
+                    </span>
+                  </div>
+
+                  {/* Price Difference */}
+                  {room.roomType.priceWithBreakfast >
+                    room.roomType.priceWithoutBreakfast && (
+                    <div className='text-center'>
+                      <span className='text-muted-foreground text-xs'>
+                        Save{" "}
+                        {(
+                          room.roomType.priceWithBreakfast -
+                          room.roomType.priceWithoutBreakfast
+                        ).toLocaleString()}{" "}
+                        Ks without breakfast
+                      </span>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

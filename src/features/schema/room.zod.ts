@@ -1,20 +1,5 @@
 import { z } from "zod";
 
-export type Room = {
-  roomNumber: string;
-  floorNumber: number;
-  roomType: {
-    id: number;
-    name: string;
-    price: number;
-    pax: number;
-  };
-  status: {
-    id: number;
-    label: string;
-  };
-};
-
 export const roomUpsertSchema = z.object({
   roomNumber: z
     .string()

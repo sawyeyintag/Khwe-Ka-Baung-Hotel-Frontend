@@ -1,7 +1,7 @@
 import { Room } from "@/types/room.type";
 import { RoomStatusIds } from "../data/data";
 
-export const roomFilterSorter = {
+export const roomFilter = {
   statusFilter(roomType: string) {
     return (room: Room) => {
       switch (roomType) {
@@ -19,9 +19,11 @@ export const roomFilterSorter = {
 
   searchFilter(searchTerm: string) {
     return (room: Room) => {
-      return room.roomType.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      return (
+        room.roomType.name.toLowerCase().includes(lowerSearchTerm) ||
+        room.roomNumber.toLowerCase().includes(lowerSearchTerm)
+      );
     };
   },
 

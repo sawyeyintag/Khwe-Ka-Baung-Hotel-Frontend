@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { roomService } from "@/services/room.service";
+import { Room } from "@/types/room.type";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SelectDropdown } from "@/components/select-dropdown";
-import { Room, roomUpsertSchema } from "../../schema/room.zod";
+import { roomUpsertSchema } from "../../schema/room.zod";
 import { roomTypes } from "../data/data";
 
 type RoomForm = z.infer<typeof roomUpsertSchema>;
