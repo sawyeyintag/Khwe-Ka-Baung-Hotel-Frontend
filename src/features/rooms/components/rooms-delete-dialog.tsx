@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { IconAlertTriangle } from "@tabler/icons-react";
+import { Room } from "@/types/room.type";
 import { showSubmittedData } from "@/utils/show-submitted-data";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ConfirmDialog } from "@/components/confirm-dialog";
-import { Room } from "../../schema/room.zod";
 
 interface Props {
   open: boolean;
