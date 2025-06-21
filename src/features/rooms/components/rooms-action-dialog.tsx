@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { roomTypeService } from "@/services/room-type.service";
 import { roomService } from "@/services/room.service";
 import { Room } from "@/types/room.type";
 import { Loader2 } from "lucide-react";
@@ -26,7 +27,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { SelectDropdown } from "@/components/select-dropdown";
 import { roomUpsertSchema } from "../../schema/room.zod";
-import { roomTypes } from "../data/data";
 
 type RoomForm = z.infer<typeof roomUpsertSchema>;
 
@@ -54,6 +54,14 @@ export function RoomsActionDialog({ currentRoom, open, onOpenChange }: Props) {
   });
 
   const queryClient = useQueryClient();
+
+  const { data: roomTypes = [] } = useQuery({
+    queryKey: ["roomTypes"],
+    queryFn: () => roomTypeService.getAll(),
+    meta: {
+      showLoadingBar: true,
+    },
+  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (values: RoomForm) => {
