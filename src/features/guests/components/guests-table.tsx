@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   ColumnFiltersState,
-  RowData,
   SortingState,
   VisibilityState,
   flexRender,
@@ -23,16 +22,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+import { TablePagination } from "@/components/table/table-pagination";
+import { GuestTableToolbar } from "./guest-table-toolbar";
 import { columns } from "./guests-columns";
-
-declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    className: string;
-  }
-}
 
 export function GuestsTable() {
   const [rowSelection, setRowSelection] = useState({});
@@ -72,7 +64,7 @@ export function GuestsTable() {
 
   return (
     <div className='space-y-4'>
-      <DataTableToolbar table={table} />
+      <GuestTableToolbar table={table} />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -138,7 +130,7 @@ export function GuestsTable() {
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <TablePagination table={table} />
     </div>
   );
 }

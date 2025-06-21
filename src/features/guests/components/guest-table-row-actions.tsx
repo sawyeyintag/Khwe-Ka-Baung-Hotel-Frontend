@@ -13,11 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useGuests } from "../context/guests-context";
 
-interface DataTableRowActionsProps {
+interface TableRowActionsProps {
   row: Row<Guest>;
 }
 
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+export function TableRowActions({ row }: TableRowActionsProps) {
   const { setOpen, setCurrentRow } = useGuests();
   return (
     <>
