@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { guestService } from "@/services/guest.service";
+import { Guest } from "@/types/guest.type";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ConfirmDialog } from "@/components/confirm-dialog";
-import { Guest } from "../data/schema";
 
 interface Props {
   open: boolean;

@@ -1,9 +1,10 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
+import { guestFormSchema } from "@/schemas/guest.zod";
 import { guestService } from "@/services/guest.service";
+import { Guest, GuestFormInput } from "@/types/guest.type";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -24,20 +25,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Guest } from "../data/schema";
-
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is required." }),
-  email: z
-    .string()
-    .min(1, { message: "Email is required." })
-    .email({ message: "Email is invalid." }),
-  phone: z.string().min(1, { message: "Phone is required." }),
-  address: z.string().min(1, { message: "Address is required." }),
-  nicCardNum: z.string().min(1, { message: "NIC is required." }),
-  isEdit: z.boolean(),
-});
-type GuestForm = z.infer<typeof formSchema>;
 
 interface Props {
   currentRow?: Guest;
@@ -48,8 +35,8 @@ interface Props {
 export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
   const queryClient = useQueryClient();
   const isEdit = !!currentRow;
-  const form = useForm<GuestForm>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<GuestFormInput>({
+    resolver: zodResolver(guestFormSchema),
     defaultValues: isEdit
       ? {
           ...currentRow,
@@ -66,7 +53,7 @@ export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (values: GuestForm) => {
+    mutationFn: (values: GuestFormInput) => {
       const guest = {
         name: values.name,
         email: values.email,
@@ -94,7 +81,7 @@ export function GuestsActionDialog({ currentRow, open, onOpenChange }: Props) {
     },
   });
 
-  const onSubmit = async (values: GuestForm) => {
+  const onSubmit = async (values: GuestFormInput) => {
     mutate(values);
   };
 

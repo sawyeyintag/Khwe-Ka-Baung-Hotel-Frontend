@@ -2,7 +2,7 @@ import { useGuests } from "../context/guests-context";
 import { GuestsActionDialog } from "./guests-action-dialog";
 import { GuestsDeleteDialog } from "./guests-delete-dialog";
 
-export function UsersDialogs() {
+export function GuestsDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useGuests();
   return (
     <>

@@ -1,6 +1,7 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row } from "@tanstack/react-table";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { Guest } from "@/types/guest.type";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useGuests } from "../context/guests-context";
-import { Guest } from "../data/schema";
 
 interface DataTableRowActionsProps {
   row: Row<Guest>;

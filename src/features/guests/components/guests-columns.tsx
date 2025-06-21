@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { ColumnDef } from "@tanstack/react-table";
+import { Guest } from "@/types/guest.type";
 import LongText from "@/components/long-text";
-import { Guest } from "../data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 

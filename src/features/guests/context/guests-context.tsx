@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { Guest } from "@/types/guest.type";
 import useDialogState from "@/hooks/use-dialog-state";
-import { Guest } from "../data/schema";
 
 type GuestsDialogType = "invite" | "add" | "edit" | "delete";
 

@@ -1,5 +1,5 @@
 import { apiService, ResponseData } from "@/plugins/axios";
-import { GuestUpsert, Guest } from "@/features/guests/data/schema";
+import { Guest, GuestFormData } from "@/types/guest.type";
 
 export const guestService = {
   async getAll() {
@@ -10,14 +10,14 @@ export const guestService = {
     const response: ResponseData<Guest> = await apiService.get(`/guests/${id}`);
     return response.data.data;
   },
-  async create(data: GuestUpsert) {
+  async create(data: GuestFormData) {
     const response: ResponseData<Guest> = await apiService.post(
       "/guests",
       data
     );
     return response.data.data;
   },
-  async update(id: string, data: GuestUpsert) {
+  async update(id: string, data: GuestFormData) {
     const response: ResponseData<Guest> = await apiService.put(
       `/guests/${id}`,
       data

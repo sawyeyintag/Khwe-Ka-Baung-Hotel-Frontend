@@ -3,12 +3,12 @@ import { Main } from "@/components/layout/main";
 import { ProfileDropdown } from "@/components/profile-dropdown";
 import { Search } from "@/components/search";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { UsersDialogs } from "./components/guests-dialogs";
+import { GuestsDialogs } from "./components/guests-dialogs";
 import { GuestsPrimaryButtons } from "./components/guests-primary-buttons";
 import { GuestsTable } from "./components/guests-table";
 import GuestsProvider from "./context/guests-context";
 
-export default function Users() {
+export default function Guests() {
   return (
     <GuestsProvider>
       <Header fixed>
@@ -32,7 +32,7 @@ export default function Users() {
         </div>
       </Main>
 
-      <UsersDialogs />
+      <GuestsDialogs />
     </GuestsProvider>
   );
 }
