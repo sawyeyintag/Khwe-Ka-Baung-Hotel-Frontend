@@ -1,11 +1,19 @@
 import { apiService, ResponseData } from "@/plugins/axios";
-import { Room, RoomCreate, RoomUpdate } from "@/types/room.type";
+import {
+  Room,
+  RoomCreate,
+  RoomSearchParams,
+  RoomUpdate,
+} from "@/types/room.type";
 
 export const roomService = {
-  async getAll() {
-    const response: ResponseData<Room[]> = await apiService.get("/rooms");
+  async getAll(params: RoomSearchParams = {}) {
+    const response: ResponseData<Room[]> = await apiService.get("/rooms", {
+      params,
+    });
     return response.data.data;
   },
+
   async getById(roomNumber: string) {
     const response: ResponseData<Room> = await apiService.get(
       `/rooms/${roomNumber}`

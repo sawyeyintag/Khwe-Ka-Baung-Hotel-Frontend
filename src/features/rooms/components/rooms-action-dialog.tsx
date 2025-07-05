@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SelectDropdown } from "@/components/select-dropdown";
-import { roomUpsertSchema } from "../../schema/room.zod";
+import { roomUpsertSchema } from "../../../schemas/room.zod";
 
 type RoomForm = z.infer<typeof roomUpsertSchema>;
 

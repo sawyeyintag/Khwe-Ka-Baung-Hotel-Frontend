@@ -27,6 +27,7 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedUsersIndexImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTasksIndexImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSettingsIndexImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedSessionsIndexImport } from './routes/_authenticated/sessions/index'
 import { Route as AuthenticatedRoomsIndexImport } from './routes/_authenticated/rooms/index'
 import { Route as AuthenticatedHelpCenterIndexImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedGuestsIndexImport } from './routes/_authenticated/guests/index'
@@ -135,6 +136,14 @@ const AuthenticatedSettingsIndexRoute = AuthenticatedSettingsIndexImport.update(
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any,
+)
+
+const AuthenticatedSessionsIndexRoute = AuthenticatedSessionsIndexImport.update(
+  {
+    id: '/sessions/',
+    path: '/sessions/',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any,
 )
 
@@ -355,6 +364,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoomsIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/sessions/': {
+      id: '/_authenticated/sessions/'
+      path: '/sessions'
+      fullPath: '/sessions'
+      preLoaderRoute: typeof AuthenticatedSessionsIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -412,6 +428,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedGuestsIndexRoute: typeof AuthenticatedGuestsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedRoomsIndexRoute: typeof AuthenticatedRoomsIndexRoute
+  AuthenticatedSessionsIndexRoute: typeof AuthenticatedSessionsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
@@ -424,6 +441,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedGuestsIndexRoute: AuthenticatedGuestsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedRoomsIndexRoute: AuthenticatedRoomsIndexRoute,
+  AuthenticatedSessionsIndexRoute: AuthenticatedSessionsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
@@ -454,6 +472,7 @@ export interface FileRoutesByFullPath {
   '/guests': typeof AuthenticatedGuestsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/rooms': typeof AuthenticatedRoomsIndexRoute
+  '/sessions': typeof AuthenticatedSessionsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -480,6 +499,7 @@ export interface FileRoutesByTo {
   '/guests': typeof AuthenticatedGuestsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/rooms': typeof AuthenticatedRoomsIndexRoute
+  '/sessions': typeof AuthenticatedSessionsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -509,6 +529,7 @@ export interface FileRoutesById {
   '/_authenticated/guests/': typeof AuthenticatedGuestsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/rooms/': typeof AuthenticatedRoomsIndexRoute
+  '/_authenticated/sessions/': typeof AuthenticatedSessionsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
@@ -539,6 +560,7 @@ export interface FileRouteTypes {
     | '/guests'
     | '/help-center'
     | '/rooms'
+    | '/sessions'
     | '/settings/'
     | '/tasks'
     | '/users'
@@ -564,6 +586,7 @@ export interface FileRouteTypes {
     | '/guests'
     | '/help-center'
     | '/rooms'
+    | '/sessions'
     | '/settings'
     | '/tasks'
     | '/users'
@@ -591,6 +614,7 @@ export interface FileRouteTypes {
     | '/_authenticated/guests/'
     | '/_authenticated/help-center/'
     | '/_authenticated/rooms/'
+    | '/_authenticated/sessions/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
@@ -658,6 +682,7 @@ export const routeTree = rootRoute
         "/_authenticated/guests/",
         "/_authenticated/help-center/",
         "/_authenticated/rooms/",
+        "/_authenticated/sessions/",
         "/_authenticated/tasks/",
         "/_authenticated/users/"
       ]
@@ -741,6 +766,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/rooms/": {
       "filePath": "_authenticated/rooms/index.ts",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/sessions/": {
+      "filePath": "_authenticated/sessions/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/settings/": {

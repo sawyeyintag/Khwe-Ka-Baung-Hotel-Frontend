@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { roomUpsertSchema } from "@/features/schema/room.zod";
+import { roomSearchSchema, roomUpsertSchema } from "@/schemas/room.zod";
 import { RoomStatus } from "./room-status.type";
 import { RoomType } from "./room-type.type";
 
@@ -13,3 +13,5 @@ export type Room = {
 export type RoomCreate = Omit<z.infer<typeof roomUpsertSchema>, "isEdit">;
 
 export type RoomUpdate = Omit<RoomCreate, "roomNumber">;
+
+export type RoomSearchParams = z.infer<typeof roomSearchSchema>;

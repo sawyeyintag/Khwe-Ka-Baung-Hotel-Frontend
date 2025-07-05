@@ -6,8 +6,16 @@ export const guestService = {
     const response: ResponseData<Guest[]> = await apiService.get("/guests");
     return response.data.data;
   },
-  async getById(id: string) {
-    const response: ResponseData<Guest> = await apiService.get(`/guests/${id}`);
+  async getById(uid: string) {
+    const response: ResponseData<Guest> = await apiService.get(
+      `/guests/${uid}`
+    );
+    return response.data.data;
+  },
+  async getGuestByNicCardNum(nicCardNum: string) {
+    const response: ResponseData<Guest> = await apiService.get(
+      `/guests/nic-card/${nicCardNum}`
+    );
     return response.data.data;
   },
   async create(data: GuestFormData) {
@@ -17,14 +25,14 @@ export const guestService = {
     );
     return response.data.data;
   },
-  async update(id: string, data: GuestFormData) {
+  async update(uid: string, data: GuestFormData) {
     const response: ResponseData<Guest> = await apiService.put(
-      `/guests/${id}`,
+      `/guests/${uid}`,
       data
     );
     return response.data.data;
   },
-  async delete(id: string) {
-    await apiService.delete(`/guests/${id}`);
+  async delete(uid: string) {
+    await apiService.delete(`/guests/${uid}`);
   },
 };

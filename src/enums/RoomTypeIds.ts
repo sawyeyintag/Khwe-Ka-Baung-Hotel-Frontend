@@ -1,0 +1,6 @@
+export enum RoomTypeIds {
+  SINGLE_BEDS_ROOM = 1,
+  DOUBLE_BED_ROOM,
+  TRIPLE_BED_ROOM,
+  FAMMILY_ROOM,
+}
