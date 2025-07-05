@@ -36,7 +36,7 @@ import { Separator } from "@/components/ui/separator";
 import { SelectDropdown } from "@/components/select-dropdown";
 
 // Simplified schema
-const SessionFormSchema = z
+const SessionCreateSchema = z
   .object({
     selectedRoomTypeId: z.string().min(1, "Please select a room type"),
     selectedFloor: z.string().min(1, "Please select a floor"),
@@ -50,7 +50,7 @@ const SessionFormSchema = z
     path: ["guestIds"],
   });
 
-type SessionFormData = z.infer<typeof SessionFormSchema>;
+type SessionFormData = z.infer<typeof SessionCreateSchema>;
 
 interface Guest {
   uid: string;
@@ -76,7 +76,7 @@ export default function SessionsActionDialog({ open, onOpenChange }: Props) {
   const [selectedGuestsData, setSelectedGuestsData] = useState<Guest[]>([]);
 
   const form = useForm<SessionFormData>({
-    resolver: zodResolver(SessionFormSchema),
+    resolver: zodResolver(SessionCreateSchema),
     defaultValues: {
       roomNumber: "",
       guestIds: [],

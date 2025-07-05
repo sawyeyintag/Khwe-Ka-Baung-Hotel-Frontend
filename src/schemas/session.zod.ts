@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const SessionFormSchema = z
+export const SessionCreateSchema = z
   .object({
     selectedRoomTypeId: z.string().min(1, "Please select a room type"),
     selectedFloor: z.string().min(1, "Please select a floor"),
@@ -13,3 +13,7 @@ export const SessionFormSchema = z
     message: "At least one guest is required",
     path: ["guestIds"],
   });
+
+export const SessionEndSchema = z.object({
+  actualCheckOut: z.date(),
+});
