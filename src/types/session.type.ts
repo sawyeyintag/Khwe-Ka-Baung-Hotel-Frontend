@@ -14,4 +14,9 @@ export type Session = {
 
 export type SessionCreateFormInput = z.infer<typeof SessionCreateSchema>;
 
+export type SessionCreateFormData = Omit<
+  SessionCreateFormInput,
+  "selectedRoomTypeId" | "selectedFloor"
+>;
+
 export type SessionEndFormInput = z.infer<typeof SessionEndSchema>;

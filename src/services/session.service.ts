@@ -1,7 +1,7 @@
 import { apiService, ResponseData } from "@/plugins/axios";
 import {
   Session,
-  SessionCreateFormInput,
+  SessionCreateFormData,
   SessionEndFormInput,
 } from "@/types/session.type";
 
@@ -16,7 +16,7 @@ export const sessionService = {
     );
     return response.data.data;
   },
-  async create(data: SessionCreateFormInput) {
+  async create(data: SessionCreateFormData) {
     const response: ResponseData<Session> = await apiService.post(
       "/sessions",
       data

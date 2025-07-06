@@ -4,13 +4,14 @@ import { useState, useMemo } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { RoomStatusIds } from "@/enums/RoomStatusIds";
 import { guestService } from "@/services/guest.service";
 import { roomTypeService } from "@/services/room-type.service";
 import { roomService } from "@/services/room.service";
+import { sessionService } from "@/services/session.service";
+import { SessionCreateFormData } from "@/types/session.type";
 import { Search, X, Loader2, User, Users, Bed, Calendar } from "lucide-react";
-import { showSubmittedData } from "@/utils/show-submitted-data";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,7 +43,7 @@ const SessionCreateSchema = z
     selectedFloor: z.string().min(1, "Please select a floor"),
     roomNumber: z.string().min(1, "Room number is required"),
     guestIds: z.array(z.string()),
-    extraBeds: z.number().min(0).max(10),
+    numberOfExtraBeds: z.number().min(0).max(10),
     actualCheckIn: z.date(),
   })
   .refine((data) => data.guestIds.length > 0, {
@@ -81,7 +82,7 @@ export default function SessionsActionDialog({ open, onOpenChange }: Props) {
       roomNumber: "",
       guestIds: [],
       actualCheckIn: new Date(),
-      extraBeds: 0,
+      numberOfExtraBeds: 0,
       selectedRoomTypeId: "",
       selectedFloor: "",
     },
@@ -90,27 +91,32 @@ export default function SessionsActionDialog({ open, onOpenChange }: Props) {
   const isSubmitting = form.formState.isSubmitting;
 
   async function onSubmit(data: SessionFormData) {
-    const sessionPayload = {
+    const sessionPayload: SessionCreateFormData = {
       roomNumber: data.roomNumber,
       guestIds: data.guestIds,
-      numberOfExtraBeds: data.extraBeds,
+      numberOfExtraBeds: data.numberOfExtraBeds,
       actualCheckIn: data.actualCheckIn,
     };
 
-    showSubmittedData(sessionPayload, "Session Data Submitted");
-
-    // await sessionService.create(sessionPayload);
-
-    // Reset and close
-    form.reset();
-    setSearchedGuest(null);
-    setGuestSearch("");
-    setSelectedGuestsData([]);
-    onOpenChange(false);
+    mutate(sessionPayload, {
+      onSuccess: () => {
+        // Reset form and close dialog
+        form.reset();
+        setSearchedGuest(null);
+        setGuestSearch("");
+        setSelectedGuestsData([]);
+        onOpenChange(false);
+      },
+      onError: (error) => {
+        // eslint-disable-next-line no-console
+        console.error("Error creating session:", error);
+        alert("Failed to create session. Please try again.");
+      },
+    });
   }
 
   // Search guest by NIC card number
-  const searchGuestByNic = async () => {
+  async function searchGuestByNic() {
     if (!guestSearch.trim()) return;
 
     setIsSearching(true);
@@ -131,10 +137,10 @@ export default function SessionsActionDialog({ open, onOpenChange }: Props) {
     } finally {
       setIsSearching(false);
     }
-  };
+  }
 
   // Add guest to selection
-  const addGuest = (guest: Guest) => {
+  function addGuest(guest: Guest) {
     const currentIds = form.getValues("guestIds");
     if (!currentIds.includes(guest.uid)) {
       form.setValue("guestIds", [...currentIds, guest.uid]);
@@ -142,17 +148,17 @@ export default function SessionsActionDialog({ open, onOpenChange }: Props) {
     }
     setSearchedGuest(null);
     setGuestSearch("");
-  };
+  }
 
   // Remove guest from selection
-  const removeGuest = (guestId: string) => {
+  function removeGuest(guestId: string) {
     const currentIds = form.getValues("guestIds");
     form.setValue(
       "guestIds",
       currentIds.filter((id) => id !== guestId)
     );
     setSelectedGuestsData(selectedGuestsData.filter((g) => g.uid !== guestId));
-  };
+  }
 
   // Queries
   const { data: roomTypes = [] } = useQuery({
@@ -181,6 +187,16 @@ export default function SessionsActionDialog({ open, onOpenChange }: Props) {
         roomStatusId: String(RoomStatusIds.AVAILABLE),
       }),
     enabled: !!selectedRoomTypeId && !!selectedFloor,
+  });
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: (data: SessionCreateFormData) => sessionService.create(data),
+    onSuccess: () => {
+      // Reset form and close dialog
+      queryClient.invalidateQueries({ queryKey: ["sessions"] });
+    },
   });
 
   // Calculate occupancy
@@ -508,7 +524,7 @@ export default function SessionsActionDialog({ open, onOpenChange }: Props) {
 
                 <FormField
                   control={form.control}
-                  name='extraBeds'
+                  name='numberOfExtraBeds'
                   render={({ field }) => (
                     <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                       <FormLabel className='col-span-2 text-right'>
