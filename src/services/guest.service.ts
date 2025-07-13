@@ -18,6 +18,12 @@ export const guestService = {
     );
     return response.data.data;
   },
+  async searchGuests(query: string) {
+    const response: ResponseData<Guest[]> = await apiService.get(
+      `/guests/search?q=${encodeURIComponent(query)}`
+    );
+    return response.data.data;
+  },
   async create(data: GuestFormData) {
     const response: ResponseData<Guest> = await apiService.post(
       "/guests",

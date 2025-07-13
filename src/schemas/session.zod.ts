@@ -6,6 +6,8 @@ export const SessionCreateSchema = z
     selectedFloor: z.string().min(1, "Please select a floor"),
     roomNumber: z.string().min(1, "Room number is required"),
     guestIds: z.array(z.string()),
+    note: z.string().optional(),
+    isBreakfastIncluded: z.boolean(),
     numberOfExtraBeds: z.number().min(0).max(10),
     actualCheckIn: z.date(),
   })

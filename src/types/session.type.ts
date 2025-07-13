@@ -8,6 +8,7 @@ export type Session = {
   actualCheckIn: Date;
   actualCheckOut: Date | null;
   isActive: boolean;
+  note?: string;
   createdAt: Date;
   updatedAt: Date;
 };
